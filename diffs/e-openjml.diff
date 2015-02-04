@@ -67,48 +67,39 @@ Index: runtime/org/jmlspecs/utils/Utils.java
  import org.jmlspecs.lang.Real;
  
  
-@@ -810,4 +813,44 @@
+@@ -810,4 +813,35 @@
          System.out.println(msg);
          return true;
      }
 +    
 +    /** Additions for STROBE */
 +    public static int createSnapshot(){
-+        if(RVMThread.getCurrentThread().snapshotId != -1){
-+//            System.out.println("-- Thread "+ RVMThread.getCurrentThread().getId() +" Nested call. Not initiating.");            
++        if(RVMThread.getCurrentThread().getSnapshotId() != -1){
 +            return -1;
 +        }
-+        // make snapshot
 +        int snapshotid = Snapshot.initiateProbe();
-+//        System.out.println("- Thread "+ RVMThread.getCurrentThread().getId() +" Initiating snapshot " + snapshotid);
 +        return snapshotid;
 +    }
 +    
 +    public static void switchToSnapshot(int snapshotid){
 +        if(snapshotid == -1){
-+//            System.out.println("-- Thread "+ RVMThread.getCurrentThread().getId() +" Nested call. Not switching.");
 +            return;
 +        }
-+//        System.out.println("- Thread "+ RVMThread.getCurrentThread().getId() +" Switching to snapshot " + snapshotid);
-+        RVMThread.getCurrentThread().snapshotId = snapshotid;        
++        RVMThread.getCurrentThread().switchToSnapshot(snapshotid);        
 +    }
 +    
 +    public static void switchToLive(int snapshotid){
 +        if(snapshotid == -1){
-+//            System.out.println("-- Thread "+ RVMThread.getCurrentThread().getId() +"-- Nested call. Not switching to live.");
 +            return;
 +        }
-+//        System.out.println("- Thread "+ RVMThread.getCurrentThread().getId() +" Switching to live");
-+        RVMThread.getCurrentThread().snapshotId = -1;        
++        RVMThread.getCurrentThread().switchToLive();        
 +    }
 +    
 +    public static void destroySnapshot(int snapshotid){
 +        if(snapshotid == -1){
-+//            System.out.println("-- Thread "+ RVMThread.getCurrentThread().getId() +"-- Nested call. Not destroying.");
 +            return;
 +        }
-+//        System.out.println("- Thread "+ RVMThread.getCurrentThread().getId() +" Destroying snapshot " + snapshotid);
-+        Snapshot.completeProbe(snapshotid);        
++        Snapshot.completeProbe(snapshotid);
 +    }
 +    
  }
